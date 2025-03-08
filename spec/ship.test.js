@@ -21,17 +21,15 @@ describe("Ship", () => {
     expect(ship.isSunk).toBeDefined();
   });
 
-  it("should have a hitCount after hit", () => {
+  it("should have a hitCount", () => {
+    const ship = new Ship(10);
+    expect(ship.hitCount).toBe(0);
+  });
+
+  it("should increase the hitCount after hit", () => {
     const ship = new Ship(10);
     ship.hit();
     expect(ship.hitCount).toBe(1);
-  });
-
-  it("should have a hitCount after hit", () => {
-    const ship = new Ship(10);
-    ship.hit();
-    ship.hit();
-    expect(ship.hitCount).toBe(2);
   });
 
   it("should not be sunk if the hitCount is less than the length", () => {
