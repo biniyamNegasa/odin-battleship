@@ -1,7 +1,8 @@
 import "./style.css";
 import Player from "./player.js";
 import GameBoard from "./gameboard.js";
-import { renderBoard } from "./domManipulator.js";
+import { applyBorders, renderBoard } from "./domManipulator.js";
+import RandomizedSet from "./randomizedSet.js";
 
 const humanPlayer = new Player(new GameBoard(), "human");
 const computerPlayer = new Player(new GameBoard(), "computer");
@@ -32,6 +33,19 @@ const addEventToBoard = (board, domBoard) => {
 
         domBoard.rows[i].cells[j].classList.add("disabled");
 
+        if (
+          board.allShipCoordinates.has(i + "," + j) &&
+          board.ships.get(board.allShipCoordinates.get(i + "," + j)).isSunk()
+        ) {
+          console.log("sunk");
+          applyBorders(
+            board.shipToCoordinates.get(
+              board.allShipCoordinates.get(i + "," + j),
+            ),
+            domBoard,
+          );
+        }
+
         turn = 1 - turn;
         if (board.areAllShipsSunk()) {
           setTimeout(() => {
@@ -48,23 +62,40 @@ const addEventToBoard = (board, domBoard) => {
   }
 };
 
-for (let i = 0; i < 10; i += 2) {
-  humanPlayer.gameBoard.placeShip(i, 0, true, i / 2 + 1);
+function shipPlacer(board) {
+  const randomizedSet = new RandomizedSet();
+  for (let i = 0; i < board.size; i++) {
+    for (let j = 0; j < board.size; j++) {
+      randomizedSet.insert(i + "," + j);
+    }
+  }
+
+  for (let i = 0; i < board.numberOfShips; i++) {
+    let randomRow = randomizedSet.getRandom();
+    let [row, col] = randomRow.split(",").map((x) => parseInt(x));
+    let first = Math.round(Math.random());
+
+    while (
+      !board.placeShip(row, col, first, i + 1) &&
+      !board.placeShip(row, col, 1 - first, i + 1)
+    ) {
+      randomRow = randomizedSet.getRandom();
+      [row, col] = randomRow.split(",").map((x) => parseInt(x));
+      first = Math.round(Math.random());
+    }
+  }
 }
 
+shipPlacer(humanPlayer.gameBoard);
 addEventToBoard(humanPlayer.gameBoard, humanPlayerBoard);
 humanPlayerBoard.classList.add("disabled-board");
-renderBoard(
-  humanPlayer.gameBoard.allShipCoordinates,
-  humanPlayerBoard,
-  "",
-  "blue",
-);
+renderBoard(humanPlayer.gameBoard.allShipCoordinates, humanPlayerBoard, "", "");
 
-for (let i = 0; i < 10; i += 2) {
-  computerPlayer.gameBoard.placeShip(0, i, false, i / 2 + 1);
-}
+humanPlayer.gameBoard.shipToCoordinates.forEach((arr) => {
+  applyBorders(arr, humanPlayerBoard);
+});
 
+shipPlacer(computerPlayer.gameBoard);
 addEventToBoard(computerPlayer.gameBoard, computerPlayerBoard);
 renderBoard(
   computerPlayer.gameBoard.allShipCoordinates,

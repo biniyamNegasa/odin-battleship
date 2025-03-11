@@ -6,17 +6,37 @@ export default class GameBoard {
   #missedCoordinates;
   #ships;
   #size;
+  #numberOfShips;
+  #shipToCoordinates;
 
   constructor(numberOfShips = 5) {
     this.#ships = new Map();
     this.#allShipCoordinates = new Map();
+    this.#shipToCoordinates = new Map();
     this.#foundCoordinates = new Set();
     this.#missedCoordinates = new Set();
     this.#size = 10;
+    this.#numberOfShips = numberOfShips;
 
     for (let i = 0; i < numberOfShips; i++) {
       this.#ships.set(i + 1, new Ship(i + 1));
     }
+  }
+
+  get ships() {
+    return this.#ships;
+  }
+
+  get shipToCoordinates() {
+    return this.#shipToCoordinates;
+  }
+
+  get size() {
+    return this.#size;
+  }
+
+  get numberOfShips() {
+    return this.#numberOfShips;
   }
 
   get allShipCoordinates() {
@@ -37,6 +57,11 @@ export default class GameBoard {
     for (let i = 0; i < shipLength; i++) {
       const currKey = `${row},${col}`;
       this.#allShipCoordinates.set(currKey, shipLength);
+      if (this.#shipToCoordinates.has(shipLength)) {
+        this.#shipToCoordinates.get(shipLength).push(currKey);
+      } else {
+        this.#shipToCoordinates.set(shipLength, [currKey]);
+      }
       horizontal ? col++ : row++;
     }
     return true;
