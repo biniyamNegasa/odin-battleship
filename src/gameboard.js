@@ -22,6 +22,12 @@ export default class GameBoard {
       this.#ships.set(i + 1, new Ship(i + 1));
     }
   }
+  clear() {
+    this.#allShipCoordinates.clear();
+    this.#foundCoordinates.clear();
+    this.#missedCoordinates.clear();
+    this.#shipToCoordinates.clear();
+  }
 
   get ships() {
     return this.#ships;

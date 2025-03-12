@@ -1,7 +1,7 @@
 import "./style.css";
 import Player from "./player.js";
 import GameBoard from "./gameboard.js";
-import { applyBorders, renderBoard } from "./domManipulator.js";
+import { removeBorders, applyBorders, renderBoard } from "./domManipulator.js";
 import RandomizedSet from "./randomizedSet.js";
 
 const humanPlayer = new Player(new GameBoard(), "human");
@@ -11,6 +11,8 @@ const humanPlayerBoard = document.querySelector(".first-player-board table");
 const computerPlayerBoard = document.querySelector(
   ".second-player-board table",
 );
+const randomizeButton = document.querySelector(".randomize-button");
+const startButton = document.querySelector(".start-button");
 
 let turn = 1;
 const player = (turn) => (turn % 2 === 0 ? humanPlayer : computerPlayer);
@@ -101,6 +103,32 @@ function shipPlacer(board) {
   }
 }
 
+randomizeButton.addEventListener("click", () => {
+  humanPlayer.gameBoard.clear();
+  removeBorders(humanPlayerBoard);
+
+  shipPlacer(humanPlayer.gameBoard);
+  renderBoard(
+    humanPlayer.gameBoard.allShipCoordinates,
+    humanPlayerBoard,
+    "",
+    "",
+  );
+  humanPlayer.gameBoard.shipToCoordinates.forEach((arr) => {
+    applyBorders(arr, humanPlayerBoard);
+  });
+});
+
+startButton.addEventListener("click", () => {
+  const playerName = document.querySelector("#player-name");
+  if (playerName.value !== "") humanPlayer.type = playerName.value;
+
+  computerPlayerBoard.classList.remove("disabled-board");
+  startButton.remove();
+  randomizeButton.remove();
+  playerName.remove();
+});
+
 shipPlacer(humanPlayer.gameBoard);
 addEventToBoard(humanPlayer.gameBoard, humanPlayerBoard);
 humanPlayerBoard.classList.add("disabled-board");
@@ -112,6 +140,7 @@ humanPlayer.gameBoard.shipToCoordinates.forEach((arr) => {
 
 shipPlacer(computerPlayer.gameBoard);
 addEventToBoard(computerPlayer.gameBoard, computerPlayerBoard);
+computerPlayerBoard.classList.add("disabled-board");
 renderBoard(
   computerPlayer.gameBoard.allShipCoordinates,
   computerPlayerBoard,

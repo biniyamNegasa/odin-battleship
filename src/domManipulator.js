@@ -8,6 +8,22 @@ export const renderBoard = (coordinates, domBoard, content, className) => {
   });
 };
 
+export function removeBorders(domBoard) {
+  const n = domBoard.rows.length;
+  const m = domBoard.rows[0].cells.length;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      const cell = domBoard.rows[i].cells[j];
+      cell.classList.remove(
+        "border-top",
+        "border-bottom",
+        "border-left",
+        "border-right",
+      );
+    }
+  }
+}
+
 export function applyBorders(coordinates, domBoard) {
   if (coordinates.length === 0) return;
 

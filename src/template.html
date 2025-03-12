@@ -8,10 +8,23 @@
   <body>
     <div class="header">
       <h1>Battleship</h1>
+      <p>
+        In Each turn players can try to hit one of their opponent's ship, if
+        they're successful they can try to hit again in that turn, else the
+        other player gets a chance.
+      </p>
+    </div>
+    <div class="button-container">
+      <button class="randomize-button">Randomize</button>
+      <input type="text" id="player-name" placeholder="Enter your name" />
+      <button class="start-button">Start</button>
     </div>
     <div class="boards">
       <div class="first-player-board">
         <table>
+          <caption>
+            Your board
+          </caption>
           <tr>
             <td tabindex="0"></td>
             <td tabindex="0"></td>
@@ -136,6 +149,9 @@
       </div>
       <div class="second-player-board">
         <table>
+          <caption>
+            Opponent's board
+          </caption>
           <tr>
             <td tabindex="0"></td>
             <td tabindex="0"></td>

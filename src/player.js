@@ -10,6 +10,11 @@ export default class Player {
   get type() {
     return this.#type;
   }
+
+  set type(type) {
+    this.#type = type;
+  }
+
   get gameBoard() {
     return this.#gameBoard;
   }
