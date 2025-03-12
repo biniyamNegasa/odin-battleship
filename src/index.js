@@ -28,16 +28,17 @@ const addEventToBoard = (board, domBoard) => {
         board.receiveAttack(i, j);
         renderBoard(board.foundCoordinates, domBoard, "X", "red");
 
-        domBoard.classList.add("disabled-board");
-        currentOtherPlayerBoard.classList.remove("disabled-board");
-
+        if (!board.allShipCoordinates.has(i + "," + j)) {
+          domBoard.classList.add("disabled-board");
+          currentOtherPlayerBoard.classList.remove("disabled-board");
+          turn = 1 - turn;
+        }
         domBoard.rows[i].cells[j].classList.add("disabled");
 
         if (
           board.allShipCoordinates.has(i + "," + j) &&
           board.ships.get(board.allShipCoordinates.get(i + "," + j)).isSunk()
         ) {
-          console.log("sunk");
           applyBorders(
             board.shipToCoordinates.get(
               board.allShipCoordinates.get(i + "," + j),
@@ -46,14 +47,13 @@ const addEventToBoard = (board, domBoard) => {
           );
         }
 
-        turn = 1 - turn;
         if (board.areAllShipsSunk()) {
           setTimeout(() => {
-            alert("Game Over! The winner is " + player(turn).type);
+            alert("Game Over! The winner is " + player(1 - turn).type);
             if (confirm("Do you want to play again?")) {
               window.location.reload();
             } else {
-              currentOtherPlayerBoard.classList.add("disabled-board");
+              domBoard.classList.add("disabled-board");
             }
           }, 100);
         }
