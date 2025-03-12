@@ -43,7 +43,9 @@ const addEventToBoard = (board, domBoard) => {
 
         if (!board.allShipCoordinates.has(i + "," + j)) {
           domBoard.classList.add("disabled-board");
+          domBoard.classList.add("hidden");
           currentOtherPlayerBoard.classList.remove("disabled-board");
+          currentOtherPlayerBoard.classList.remove("hidden");
           turn = 1 - turn;
         }
         domBoard.rows[i].cells[j].classList.add("disabled");
@@ -67,6 +69,7 @@ const addEventToBoard = (board, domBoard) => {
               window.location.reload();
             } else {
               domBoard.classList.add("disabled-board");
+              domBoard.classList.add("hidden");
             }
           }, 100);
         } else if (player(1 - turn).type === "computer") {
@@ -124,6 +127,9 @@ startButton.addEventListener("click", () => {
   if (playerName.value !== "") humanPlayer.type = playerName.value;
 
   computerPlayerBoard.classList.remove("disabled-board");
+  computerPlayerBoard.classList.remove("hidden");
+  humanPlayerBoard.classList.add("hidden");
+
   startButton.remove();
   randomizeButton.remove();
   playerName.remove();
@@ -140,7 +146,7 @@ humanPlayer.gameBoard.shipToCoordinates.forEach((arr) => {
 
 shipPlacer(computerPlayer.gameBoard);
 addEventToBoard(computerPlayer.gameBoard, computerPlayerBoard);
-computerPlayerBoard.classList.add("disabled-board");
+computerPlayerBoard.classList.add("disabled-board", "hidden");
 renderBoard(
   computerPlayer.gameBoard.allShipCoordinates,
   computerPlayerBoard,

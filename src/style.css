@@ -36,11 +36,15 @@ h1 {
   gap: 2rem;
 }
 
-.button-container {
+.btn-ctn-container {
   display: flex;
   justify-content: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4rem;
 }
 .button-container button {
   margin: 1rem;
@@ -90,6 +94,11 @@ p {
   max-width: 40ch;
 }
 
+.first-player-board table {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 table {
   box-shadow: 0 0 10px var(--tertiary-color);
   border-spacing: 0;
@@ -124,4 +133,11 @@ td:hover {
 
 .border-right {
   border-right: 3px solid var(--quinary-color);
+}
+
+@media (max-width: 480px) {
+  .hidden {
+    display: none;
+    visibility: hidden;
+  }
 }
