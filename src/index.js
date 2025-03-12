@@ -16,6 +16,17 @@ let turn = 1;
 const player = (turn) => (turn % 2 === 0 ? humanPlayer : computerPlayer);
 const otherPlayerBoard = (turn) =>
   turn % 2 === 0 ? computerPlayerBoard : humanPlayerBoard;
+let currentHumanNodeSet = allHumanNodes(humanPlayerBoard);
+
+function allHumanNodes(domBoard) {
+  let result = new RandomizedSet();
+  for (let row of domBoard.rows) {
+    for (let cell of row.cells) {
+      result.insert(cell);
+    }
+  }
+  return result;
+}
 
 const addEventToBoard = (board, domBoard) => {
   const n = domBoard.rows.length;
@@ -56,6 +67,10 @@ const addEventToBoard = (board, domBoard) => {
               domBoard.classList.add("disabled-board");
             }
           }, 100);
+        } else if (player(1 - turn).type === "computer") {
+          setTimeout(() => {
+            currentHumanNodeSet.getRandom().click();
+          }, 1000);
         }
       });
     }
