@@ -19,6 +19,14 @@ const player = (turn) => (turn % 2 === 0 ? humanPlayer : computerPlayer);
 const otherPlayerBoard = (turn) =>
   turn % 2 === 0 ? computerPlayerBoard : humanPlayerBoard;
 let currentHumanNodeSet = allHumanNodes(humanPlayerBoard);
+let temp = [];
+let visited = new Set();
+const drx = [
+  [0, 1],
+  [1, 0],
+  [0, -1],
+  [-1, 0],
+];
 
 function allHumanNodes(domBoard) {
   let result = new RandomizedSet();
@@ -47,6 +55,20 @@ const addEventToBoard = (board, domBoard) => {
           currentOtherPlayerBoard.classList.remove("disabled-board");
           currentOtherPlayerBoard.classList.remove("hidden");
           turn = 1 - turn;
+        } else if (player(1 - turn).type === "computer") {
+          for (let [dr, dc] of drx) {
+            let [r, c] = [i + dr, j + dc];
+            if (
+              r >= 0 &&
+              r < board.size &&
+              c >= 0 &&
+              c < board.size &&
+              !visited.has(domBoard.rows[r].cells[c])
+            ) {
+              temp.push(domBoard.rows[r].cells[c]);
+              currentHumanNodeSet.remove(domBoard.rows[r].cells[c]);
+            }
+          }
         }
         domBoard.rows[i].cells[j].classList.add("disabled");
 
@@ -74,7 +96,14 @@ const addEventToBoard = (board, domBoard) => {
           }, 100);
         } else if (player(1 - turn).type === "computer") {
           setTimeout(() => {
-            currentHumanNodeSet.getRandom().click();
+            let node;
+            if (temp.length > 0) {
+              node = temp.pop();
+            } else {
+              node = currentHumanNodeSet.getRandom();
+            }
+            visited.add(node);
+            node.click();
           }, 1000);
         }
       });
